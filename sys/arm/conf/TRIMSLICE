@@ -1,0 +1,74 @@
+# TRIMSLICE - kernel configuration file for FreeBSD/arm on nVidia Tegra 2
+#             based CompuLab TrimSlice
+
+ident		TRIMSLICE
+include		"../tegra/std.tegra2"
+
+
+options		SOC_TEGRA2
+options		VERBOSE_INIT_ARM
+makeoptions	MODULES_OVERRIDE=""
+
+options		SCHED_4BSD		#4BSD scheduler
+options		INET			#InterNETworking
+options		INET6			#IPv6 communications protocols
+options		FFS			#Berkeley Fast Filesystem
+options		SYSVSHM			#SYSV-style shared memory
+options		SYSVMSG			#SYSV-style message queues
+options		SYSVSEM			#SYSV-style semaphores
+options		_KPOSIX_PRIORITY_SCHEDULING #Posix P1003_1B real-time extensions
+options		MUTEX_NOINLINE
+options		RWLOCK_NOINLINE
+options		NO_FFS_SNAPSHOT
+options		NO_SWAPPING
+
+# NFS Boot
+options         NFSCL
+options         NFS_ROOT
+#options        BOOTP
+#options        BOOTP_NFSROOT
+#options        BOOTP_NFSV3
+#options        BOOTP_WIRED_TO=nlge0
+#options        BOOTP_COMPAT
+#options        ROOTDEVNAME=\"nfs:192.168.123.11:/mnt/trimslice-root"
+
+# Debugging
+makeoptions	DEBUG=-g		#Build kernel with gdb(1) debug symbols
+makeoptions	WERROR=""
+#options	VERBOSE_SYSINIT
+options		ALT_BREAK_TO_DEBUGGER
+options		DDB
+options		KDB
+options		WITNESS
+options		WITNESS_SKIPSPIN
+options		DIAGNOSTIC
+options		INVARIANTS
+options		INVARIANT_SUPPORT
+
+# Pseudo devices
+device		random
+device		pty
+device		loop
+
+# Serial ports
+device		uart
+
+# Networking
+device		ether
+device		miibus		# MII bus support
+
+# USB
+options         USB_DEBUG       # enable debug msgs
+device          ohci            # OHCI PCI->USB interface
+device          ehci            # EHCI PCI->USB interface (USB 2.0)
+device          usb             # USB Bus (required)
+
+# USB Ethernet
+device          aue             # ADMtek USB Ethernet
+device          axe             # ASIX Electronics USB Ethernet
+device          cdce            # Generic USB over Ethernet
+
+# Flattened Device Tree
+options 	FDT
+options		FDT_DTB_STATIC
+makeoptions	FDT_DTS_FILE=trimslice.dts
