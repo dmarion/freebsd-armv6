@@ -186,6 +186,16 @@
 				reg = <0x24>;
 			};
 		};
+
+		musb@47400000 {
+			compatible = "ti,am335x-musbhsfc";
+			reg = < 0x47400000 0x5000 >;
+			interrupts = <  17		/* USBSSINT */
+					18		/* USBINT0 */
+					19		/* USBINT1 */
+					34 >;		/* USBWAKEUP */
+			interrupt-parent = <&AINTC>;
+		};
 	};
 
 	chosen {
