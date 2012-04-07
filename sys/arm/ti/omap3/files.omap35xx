@@ -1,0 +1,39 @@
+#$FreeBSD$
+
+arm/arm/bus_space_generic.c			standard
+arm/arm/bus_space_asm_generic.S		standard
+arm/arm/cpufunc_asm_armv5.S			standard
+arm/arm/cpufunc_asm_arm10.S			standard
+arm/arm/cpufunc_asm_arm11.S			standard
+arm/arm/cpufunc_asm_armv7.S			standard
+arm/arm/irq_dispatch.S				standard
+
+arm/omap/cortexa8_machdep.c			standard
+arm/omap/omap_dbg_uart.c			standard
+arm/omap/cortexa8_ttb_debug.c		standard
+
+arm/omap/omap.c					standard
+arm/omap/omap_cpuid.c				standard
+arm/omap/omap_dma.c					standard
+arm/omap/omap_prcm.c				standard
+arm/omap/omap_scm.c					standard
+arm/omap/omap_gpio.c				optional	gpio
+arm/omap/omap_gptimer.c				standard
+arm/omap/omap_mmc.c					optional	mmc
+arm/omap/omap_space_asm.S			standard
+arm/omap/omap_i2c.c					optional	iic
+
+arm/omap/omap3/omap35xx.c			standard
+arm/omap/omap3/omap3_intr.c			standard
+arm/omap/omap3/omap3_prcm_clks.c	standard
+arm/omap/omap3/omap3_scm_padconf.c	standard
+arm/omap/omap3/omap3_timer.c		standard
+
+arm/omap/omap3/uart_cpu_omap3.c	optional	uart
+#arm/omap/omap3/uart_bus_omap3.c	optional	uart
+
+dev/uart/uart_dev_ns8250.c		optional	uart
+
+# USB Host controller
+arm/omap/omap_ehci.c				optional ehci usb
+
