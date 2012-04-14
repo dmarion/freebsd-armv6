@@ -1,0 +1,15 @@
+# Samsung S3C6410 common options
+#$FreeBSD$
+
+cpu		CPU_ARM11
+makeoption      ARM_LITTLE_ENDIAN
+
+makeoptions	KERNPHYSADDR=0x50010000
+options		KERNPHYSADDR=0x50010000
+makeoptions	KERNVIRTADDR=0xc0010000
+options		KERNVIRTADDR=0xc0010000
+options		PHYSADDR=0x50000000
+
+options		STARTUP_PAGETABLE_ADDR=0x50000000
+
+files	"../s3c64xx/files.s3c6410"

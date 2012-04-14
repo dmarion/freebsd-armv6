@@ -1,0 +1,48 @@
+# MINI6410 - kernel configuration file for FreeBSD/arm on Samsung S3C6410
+#            based FriendlyARM mini6410 board
+
+ident		MINI6410
+include		"../s3c64xx/std.s3c6410"
+
+
+options		SOC_S3C6410
+options		VERBOSE_INIT_ARM
+makeoptions	MODULES_OVERRIDE=""
+
+#makeoptions	DEBUG=-g		#Build kernel with gdb(1) debug symbols
+makeoptions	WERROR="-Werror"
+
+options		SCHED_4BSD		#4BSD scheduler
+options		INET			#InterNETworking
+options		INET6			#IPv6 communications protocols
+options		FFS			#Berkeley Fast Filesystem
+options		SYSVSHM			#SYSV-style shared memory
+options		SYSVMSG			#SYSV-style message queues
+options		SYSVSEM			#SYSV-style semaphores
+options		_KPOSIX_PRIORITY_SCHEDULING #Posix P1003_1B real-time extensions
+options		MUTEX_NOINLINE
+options		RWLOCK_NOINLINE
+options		NO_FFS_SNAPSHOT
+options		NO_SWAPPING
+
+# Debugging
+options		ALT_BREAK_TO_DEBUGGER
+options		DDB
+options		KDB
+
+# Pseudo devices
+device		random
+device		pty
+device		loop
+device		md
+
+# Serial ports
+device		uart
+
+#Network
+device		ether
+
+# Flattened Device Tree
+options		FDT
+options		FDT_DTB_STATIC
+makeoptions	FDT_DTS_FILE=mini6410.dts

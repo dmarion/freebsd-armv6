@@ -1,0 +1,116 @@
+/*-
+ * Copyright (c) 2011 The FreeBSD Foundation
+ * All rights reserved.
+ *
+ * Developed by Damjan Marion <damjan.marion@gmail.com>
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ */
+
+/dts-v1/;
+
+/ {
+	model = "FriendlyARM mini6410";
+	compatible = "friendlyarm,mini6410", "samsung,s3c6410";
+	#address-cells = <1>;
+	#size-cells = <1>;
+
+	interrupt-parent = <&VIC0>;
+
+	aliases {
+		serial0 = &serial0;
+		soc = &SOC;
+	};
+
+	memory {
+		device_type = "memory";
+		reg = < 0x50000000 0x10000000 >;	/* 256 MB RAM at 0x500000000 */
+	};
+
+
+	SOC: s3c6410@70000000 {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		compatible = "simple-bus";
+		ranges = <0 0x50040000 0x00004000>;	/* 16K at 0x50000000 */
+		bus-frequency = <0>;
+
+		VIC0: interrupt-controller@120000 {
+			compatible = "arm,VIC";
+			interrupt-controller;
+			#address-cells = <0>;
+			#interrupt-cells = <1>;
+			reg = < 0x1000 0x1000 >,	/* Distributor Registers */
+			      < 0x0100 0x0100 >;	/* CPU Interface Registers */
+		};
+
+		VIC1: interrupt-controller@130000 {
+			compatible = "arm,VIC";
+			interrupt-controller;
+			#address-cells = <0>;
+			#interrupt-cells = <1>;
+			reg = < 0x1000 0x1000 >,	/* Distributor Registers */
+			      < 0x0100 0x0100 >;	/* CPU Interface Registers */
+		};
+	};
+
+	serial0: serial@f005000 {
+		compatible = "ns16550";
+		reg = <0xf005000 0x40>;
+		reg-shift = <2>;
+		interrupts = < 37 >;
+		interrupt-parent = <&VIC1>;
+		clock-frequency = < 13500000 >;
+	};
+
+	serial1: serial@f005400 {
+		compatible = "ns16550";
+		reg = <0xf005400 0x40>;
+		reg-shift = <2>;
+		interrupts = < 38 >;
+		interrupt-parent = <&VIC1>;
+		clock-frequency = < 13500000 >;
+	};
+
+	serial2: serial@f005800 {
+		compatible = "ns16550";
+		reg = <0xf005800 0x100>;
+		reg-shift = <2>;
+		interrupts = < 39 >;
+		interrupt-parent = <&VIC1>;
+		clock-frequency = < 13500000 >;
+	};
+
+	serial3: serial@f005c00 {
+		compatible = "ns16550";
+		reg = <0xf005c00 0x100>;
+		reg-shift = <2>;
+		interrupts = < 40 >;
+		interrupt-parent = <&VIC1>;
+		clock-frequency = < 13500000 >;
+	};
+
+	chosen {
+		stdin = "serial0";
+		stdout = "serial0";
+	};
+};
