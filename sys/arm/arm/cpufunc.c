@@ -481,7 +481,7 @@ struct cpu_functions pj4bv7_cpufuncs = {
 	/* CPU functions */
 
 	cpufunc_id,			/* id			*/
-	arm11_drain_writebuf,		/* cpwait		*/
+	armv6_drain_writebuf,		/* cpwait		*/
 
 	/* MMU functions */
 
@@ -520,7 +520,7 @@ struct cpu_functions pj4bv7_cpufuncs = {
 	/* Other functions */
 
 	pj4b_drain_readbuf,		/* flush_prefetchbuf	*/
-	arm11_drain_writebuf,		/* drain_writebuf	*/
+	armv6_drain_writebuf,		/* drain_writebuf	*/
 	pj4b_flush_brnchtgt_all,	/* flush_brnchtgt_C	*/
 	pj4b_flush_brnchtgt_va,		/* flush_brnchtgt_E	*/
 
@@ -531,7 +531,7 @@ struct cpu_functions pj4bv7_cpufuncs = {
 	cpufunc_null_fixup,		/* dataabt_fixup	*/
 	cpufunc_null_fixup,		/* prefetchabt_fixup	*/
 
-	arm11_context_switch,		/* context_switch	*/
+	armv6_context_switch,		/* context_switch	*/
 
 	pj4bv7_setup			/* cpu setup		*/
 };
@@ -540,7 +540,7 @@ struct cpu_functions pj4bv6_cpufuncs = {
 	/* CPU functions */
 
 	cpufunc_id,			/* id			*/
-	arm11_drain_writebuf,		/* cpwait		*/
+	armv6_drain_writebuf,		/* cpwait		*/
 
 	/* MMU functions */
 
@@ -552,12 +552,12 @@ struct cpu_functions pj4bv6_cpufuncs = {
 
 	/* TLB functions */
 
-	arm11_tlb_flushID,		/* tlb_flushID		*/
-	arm11_tlb_flushID_SE,		/* tlb_flushID_SE	*/
-	arm11_tlb_flushI,		/* tlb_flushI		*/
-	arm11_tlb_flushI_SE,		/* tlb_flushI_SE	*/
-	arm11_tlb_flushD,		/* tlb_flushD		*/
-	arm11_tlb_flushD_SE,		/* tlb_flushD_SE	*/
+	armv6_tlb_flushID,		/* tlb_flushID		*/
+	armv6_tlb_flushID_SE,		/* tlb_flushID_SE	*/
+	armv6_tlb_flushI,		/* tlb_flushI		*/
+	armv6_tlb_flushI_SE,		/* tlb_flushI_SE	*/
+	armv6_tlb_flushD,		/* tlb_flushD		*/
+	armv6_tlb_flushD_SE,		/* tlb_flushD_SE	*/
 
 	/* Cache operations */
 	armv6_icache_sync_all,		/* icache_sync_all	*/
@@ -579,7 +579,7 @@ struct cpu_functions pj4bv6_cpufuncs = {
 	/* Other functions */
 
 	pj4b_drain_readbuf,		/* flush_prefetchbuf	*/
-	arm11_drain_writebuf,		/* drain_writebuf	*/
+	armv6_drain_writebuf,		/* drain_writebuf	*/
 	pj4b_flush_brnchtgt_all,	/* flush_brnchtgt_C	*/
 	pj4b_flush_brnchtgt_va,		/* flush_brnchtgt_E	*/
 
@@ -590,7 +590,7 @@ struct cpu_functions pj4bv6_cpufuncs = {
 	cpufunc_null_fixup,		/* dataabt_fixup	*/
 	cpufunc_null_fixup,		/* prefetchabt_fixup	*/
 
-	arm11_context_switch,		/* context_switch	*/
+	armv6_context_switch,		/* context_switch	*/
 
 	pj4bv6_setup			/* cpu setup		*/
 };
@@ -968,6 +968,71 @@ struct cpu_functions fa526_cpufuncs = {
 };          
 #endif	/* CPU_FA526 || CPU_FA626TE */
 
+#if defined(CPU_ARM11)
+struct cpu_functions arm11_cpufuncs = {
+	/* CPU functions */
+	
+	cpufunc_id,                     /* id                   */
+	cpufunc_nullop,                 /* cpwait               */
+	
+	/* MMU functions */
+	
+	cpufunc_control,                /* control              */
+	cpufunc_domains,                /* Domain               */
+	armv6_setttb,                   /* Setttb               */
+	cpufunc_faultstatus,            /* Faultstatus          */
+	cpufunc_faultaddress,           /* Faultaddress         */
+	
+	/* TLB functions */
+	
+	armv6_tlb_flushID,              /* tlb_flushID          */
+	armv6_tlb_flushID_SE,           /* tlb_flushID_SE       */
+	armv6_tlb_flushI,               /* tlb_flushI           */
+	armv6_tlb_flushI_SE,            /* tlb_flushI_SE        */
+	armv6_tlb_flushD,               /* tlb_flushD           */
+	armv6_tlb_flushD_SE,            /* tlb_flushD_SE        */
+	
+	/* Cache operations */
+	
+	armv6_idcache_wbinv_all,         /* icache_sync_all      */
+	armv6_icache_sync_range,        /* icache_sync_range    */
+	
+	armv6_dcache_wbinv_all,         /* dcache_wbinv_all     */
+	armv6_dcache_wbinv_range,       /* dcache_wbinv_range   */
+	armv6_dcache_inv_range,         /* dcache_inv_range     */
+	armv6_dcache_wb_range,          /* dcache_wb_range      */
+	
+	armv6_idcache_wbinv_all,        /* idcache_wbinv_all    */
+	armv6_idcache_wbinv_range,      /* idcache_wbinv_range  */
+	
+	/* Note: From OMAP4 the L2 ops are filled in when the
+	 * L2 cache controller is actually enabled.
+	 */
+	cpufunc_nullop,                 /* l2cache_wbinv_all    */
+	(void *)cpufunc_nullop,         /* l2cache_wbinv_range  */
+	(void *)cpufunc_nullop,         /* l2cache_inv_range    */
+	(void *)cpufunc_nullop,         /* l2cache_wb_range     */
+	
+	/* Other functions */
+	
+	cpufunc_nullop,                 /* flush_prefetchbuf    */
+	armv6_drain_writebuf,           /* drain_writebuf       */
+	cpufunc_nullop,                 /* flush_brnchtgt_C     */
+	(void *)cpufunc_nullop,         /* flush_brnchtgt_E     */
+	
+	armv6_sleep,                    /* sleep                */
+	
+	/* Soft functions */
+	
+	cpufunc_null_fixup,             /* dataabt_fixup        */
+	cpufunc_null_fixup,             /* prefetchabt_fixup    */
+	
+	armv6_context_switch,           /* context_switch       */
+	
+	arm11_setup                     /* cpu setup            */
+};
+#endif /* CPU_ARM11 */
+
 #if defined(CPU_CORTEXA)
 struct cpu_functions cortexa_cpufuncs = {
 	/* CPU functions */
@@ -985,12 +1050,12 @@ struct cpu_functions cortexa_cpufuncs = {
 	
 	/* TLB functions */
 	
-	arm11_tlb_flushID,              /* tlb_flushID          */
+	armv6_tlb_flushID,              /* tlb_flushID          */
 	armv7_tlb_flushID_SE,           /* tlb_flushID_SE       */
-	arm11_tlb_flushI,               /* tlb_flushI           */
-	arm11_tlb_flushI_SE,            /* tlb_flushI_SE        */
-	arm11_tlb_flushD,               /* tlb_flushD           */
-	arm11_tlb_flushD_SE,            /* tlb_flushD_SE        */
+	armv6_tlb_flushI,               /* tlb_flushI           */
+	armv6_tlb_flushI_SE,            /* tlb_flushI_SE        */
+	armv6_tlb_flushD,               /* tlb_flushD           */
+	armv6_tlb_flushD_SE,            /* tlb_flushD_SE        */
 	
 	/* Cache operations */
 	
@@ -1016,18 +1081,18 @@ struct cpu_functions cortexa_cpufuncs = {
 	/* Other functions */
 	
 	cpufunc_nullop,                 /* flush_prefetchbuf    */
-	arm11_drain_writebuf,           /* drain_writebuf       */
+	armv6_drain_writebuf,           /* drain_writebuf       */
 	cpufunc_nullop,                 /* flush_brnchtgt_C     */
 	(void *)cpufunc_nullop,         /* flush_brnchtgt_E     */
 	
-	arm11_sleep,                    /* sleep                */
+	armv6_sleep,                    /* sleep                */
 	
 	/* Soft functions */
 	
 	cpufunc_null_fixup,             /* dataabt_fixup        */
 	cpufunc_null_fixup,             /* prefetchabt_fixup    */
 	
-	arm11_context_switch,           /* context_switch       */
+	armv6_context_switch,           /* context_switch       */
 	
 	cortexa_setup                     /* cpu setup            */
 };
@@ -1325,12 +1390,22 @@ set_cpufuncs()
 		goto out;
 	}
 #endif /* CPU_ARM10 */
+#ifdef CPU_ARM11
+	if ((cputype & CPU_ID_CPU_MASK_V6) == CPU_ID_ARM1136JS ||
+	    (cputype & CPU_ID_CPU_MASK_V6) == CPU_ID_ARM1176JZFS) {
+		cpufuncs = arm11_cpufuncs;
+		cpu_reset_needs_v4_MMU_disable = 1;     /* V4 or higher */
+		get_cachetype_cp15();
+		
+		pmap_pte_init_mmu_v6();
+		/* Use powersave on this CPU. */
+		cpu_do_powersave = 1;
+		goto out;
+	}
+#endif /* CPU_ARM11 */
 #ifdef CPU_CORTEXA
-	if (cputype == CPU_ID_CORTEXA8R1 ||
-	    cputype == CPU_ID_CORTEXA8R2 ||
-	    cputype == CPU_ID_CORTEXA8R3 ||
-	    cputype == CPU_ID_CORTEXA9R1 ||
-	    cputype == CPU_ID_CORTEXA9R2) {
+	if ((cputype & CPU_ID_CPU_MASK_V6) == CPU_ID_CORTEXA8 ||
+	    (cputype & CPU_ID_CPU_MASK_V6) == CPU_ID_CORTEXA9) {
 		cpufuncs = cortexa_cpufuncs;
 		cpu_reset_needs_v4_MMU_disable = 1;     /* V4 or higher */
 		get_cachetype_cp15();

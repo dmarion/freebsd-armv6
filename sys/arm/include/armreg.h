@@ -110,6 +110,9 @@
 /* Individual CPUs are probably best IDed by everything but the revision. */
 #define CPU_ID_CPU_MASK		0xfffffff0
 
+/* in case of ARMv6 and later mask both major and minor revision */
+#define CPU_ID_CPU_MASK_V6	0xff0ffff0
+
 /* Fake CPU IDs for ARMs without CP15 */
 #define CPU_ID_ARM2		0x41560200
 #define CPU_ID_ARM250		0x41560250
@@ -145,12 +148,9 @@
 #define CPU_ID_ARM1022ES	0x4105a220
 #define CPU_ID_ARM1026EJS	0x4106a260
 #define CPU_ID_ARM1136JS	0x4107b360
-#define CPU_ID_ARM1136JSR1	0x4117b360
-#define CPU_ID_CORTEXA8R1	0x411fc080
-#define CPU_ID_CORTEXA8R2	0x412fc080
-#define CPU_ID_CORTEXA8R3	0x413fc080
-#define CPU_ID_CORTEXA9R1	0x411fc090
-#define CPU_ID_CORTEXA9R2	0x412fc090
+#define CPU_ID_ARM1176JZFS	0x410fb760
+#define CPU_ID_CORTEXA8		0x410fc080
+#define CPU_ID_CORTEXA9		0x410fc090
 #define CPU_ID_SA110		0x4401a100
 #define CPU_ID_SA1100		0x4401a110
 #define	CPU_ID_TI925T		0x54029250

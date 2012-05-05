@@ -235,15 +235,9 @@ const struct cpuidtab cpuids[] = {
 	{ CPU_ID_ARM1026EJS,	CPU_CLASS_ARM10EJ,	"ARM1026EJ-S",
 	  generic_steppings },
 
-	{ CPU_ID_CORTEXA8R1,	CPU_CLASS_CORTEXA,	"Cortex A8-r1",
+	{ CPU_ID_CORTEXA8,	CPU_CLASS_CORTEXA,	"Cortex A8",
 	  generic_steppings },
-	{ CPU_ID_CORTEXA8R2,	CPU_CLASS_CORTEXA,	"Cortex A8-r2",
-	  generic_steppings },
-	{ CPU_ID_CORTEXA8R3,	CPU_CLASS_CORTEXA,	"Cortex A8-r3",
-	  generic_steppings },
-	{ CPU_ID_CORTEXA9R1,	CPU_CLASS_CORTEXA,	"Cortex A9-r1",
-	  generic_steppings },
-	{ CPU_ID_CORTEXA9R2,	CPU_CLASS_CORTEXA,	"Cortex A9-r2",
+	{ CPU_ID_CORTEXA9,	CPU_CLASS_CORTEXA,	"Cortex A9",
 	  generic_steppings },
 
 	{ CPU_ID_SA110,		CPU_CLASS_SA1,		"SA-110",
@@ -286,9 +280,9 @@ const struct cpuidtab cpuids[] = {
 	  pxa2x0_steppings },
 	{ CPU_ID_PXA210B,	CPU_CLASS_XSCALE,	"PXA210",
 	  pxa2x0_steppings },
-	{ CPU_ID_PXA250C, 	CPU_CLASS_XSCALE,	"PXA255",
+	{ CPU_ID_PXA250C,	CPU_CLASS_XSCALE,	"PXA255",
 	  pxa255_steppings },
-	{ CPU_ID_PXA210C, 	CPU_CLASS_XSCALE,	"PXA210",
+	{ CPU_ID_PXA210C,	CPU_CLASS_XSCALE,	"PXA210",
 	  pxa2x0_steppings },
 
 	{ CPU_ID_IXP425_533,	CPU_CLASS_XSCALE,	"IXP425 533MHz",
@@ -304,7 +298,7 @@ const struct cpuidtab cpuids[] = {
 
 	{ CPU_ID_ARM1136JS,	CPU_CLASS_ARM11J,	"ARM1136J-S",
 	  generic_steppings },
-	{ CPU_ID_ARM1136JSR1,	CPU_CLASS_ARM11J,	"ARM1136J-S R1",
+	{ CPU_ID_ARM1176JZFS,	CPU_CLASS_ARM11J,	"ARM1176JZF-S",
 	  generic_steppings },
 
 	{ CPU_ID_MV88FR131,	CPU_CLASS_MARVELL,	"Feroceon 88FR131",

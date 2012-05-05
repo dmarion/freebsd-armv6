@@ -1,6 +1,5 @@
-/*	$NetBSD: cpufunc_asm_arm11.S,v 1.2 2005/12/11 12:16:41 christos Exp $	*/
 
-/*
+/*-
  * Copyright (c) 2002, 2005 ARM Limited
  * All rights reserved.
  *
@@ -27,15 +26,12 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- *
- * ARM11 assembly functions for CPU / MMU / TLB specific operations
- *
- * XXX We make no attempt at present to take advantage of the v6 memroy
- * architecture or physically tagged cache.
  */
  
 #include <machine/asm.h>
 __FBSDID("$FreeBSD$");
+
+#define DSB		mcr	p15, 0, r0, c7, c10, 4
 
 /*
  * Functions to set the MMU Translation Table Base register
@@ -43,29 +39,26 @@ __FBSDID("$FreeBSD$");
  * We need to clean and flush the cache as it uses virtual
  * addresses that are about to change.
  */
-ENTRY(arm11_setttb)
-	stmfd	sp!, {r0, lr}
-	bl	_C_LABEL(armv5_idcache_wbinv_all)
-	ldmfd	sp!, {r0, lr}
-
+ENTRY(armv6_setttb)
+	mcr	p15, 0, r0, c7, c5, 0	/* Flush I cache */
+	mcr	p15, 0, r0, c7, c14, 0	/* clean and invalidate D cache */
+	DSB
 	mcr	p15, 0, r0, c2, c0, 0	/* load new TTB */
-
 	mcr	p15, 0, r0, c8, c7, 0	/* invalidate I+D TLBs */
-	mcr	p15, 0, r0, c7, c10, 4	/* drain write buffer */
 	RET
 
 /*
  * TLB functions
  */
-ENTRY(arm11_tlb_flushID_SE)
+ENTRY(armv6_tlb_flushID_SE)
 	mcr	p15, 0, r0, c8, c6, 1	/* flush D tlb single entry */
 	mcr	p15, 0, r0, c8, c5, 1	/* flush I tlb single entry */
-	mcr	p15, 0, r0, c7, c10, 4	/* drain write buffer */
+	DSB
 	RET
 
-ENTRY(arm11_tlb_flushI_SE)
+ENTRY(armv6_tlb_flushI_SE)
 	mcr	p15, 0, r0, c8, c5, 1	/* flush I tlb single entry */
-	mcr	p15, 0, r0, c7, c10, 4	/* drain write buffer */
+	DSB
 	RET
 	
 
@@ -78,12 +71,12 @@ ENTRY(arm11_tlb_flushI_SE)
  * NOTE: Special calling convention
  *	r1, r4-r13 must be preserved
  */
-ENTRY(arm11_context_switch)
+ENTRY(armv6_context_switch)
 	/*
 	 * We can assume that the caches will only contain kernel addresses
 	 * at this point.  So no need to flush them again.
 	 */
-	mcr	p15, 0, r0, c7, c10, 4	/* drain the write buffer */
+	DSB
 	mcr	p15, 0, r0, c2, c0, 0	/* set the new TTB */
 	mcr	p15, 0, r0, c8, c7, 0	/* and flush the I+D tlbs */
 
@@ -96,34 +89,82 @@ ENTRY(arm11_context_switch)
 /*
  * TLB functions
  */
-ENTRY(arm11_tlb_flushID)
+ENTRY(armv6_tlb_flushID)
 	mcr	p15, 0, r0, c8, c7, 0	/* flush I+D tlb */
-	mcr	p15, 0, r0, c7, c10, 4	/* drain write buffer */
-	mov	pc, lr
+	DSB
+	RET
 
-ENTRY(arm11_tlb_flushI)
+ENTRY(armv6_tlb_flushI)
 	mcr	p15, 0, r0, c8, c5, 0	/* flush I tlb */
-	mcr	p15, 0, r0, c7, c10, 4	/* drain write buffer */
-	mov	pc, lr
+	DSB
+	RET
 
-ENTRY(arm11_tlb_flushD)
+ENTRY(armv6_tlb_flushD)
 	mcr	p15, 0, r0, c8, c6, 0	/* flush D tlb */
-	mcr	p15, 0, r0, c7, c10, 4	/* drain write buffer */
-	mov	pc, lr
+	DSB
+	RET
 
-ENTRY(arm11_tlb_flushD_SE)
+ENTRY(armv6_tlb_flushD_SE)
 	mcr	p15, 0, r0, c8, c6, 1	/* flush D tlb single entry */
-	mcr	p15, 0, r0, c7, c10, 4	/* drain write buffer */
-	mov	pc, lr
+	DSB
+	RET
+
+/*
+ * Cache maintenance functions
+ */
+ENTRY(armv6_dcache_wb_range)
+	add	r1, r1, r0
+	sub	r1, r1, #1
+	mcrr	p15, 0, r1, r0, c12	/* clean D cache range */
+	DSB
+	RET
+
+ENTRY(armv6_dcache_wbinv_range)
+	add	r1, r1, r0
+	sub	r1, r1, #1
+	mcrr	p15, 0, r1, r0, c14	/* clean and invaliate D cache range */
+	DSB
+	RET
+
+ENTRY(armv6_dcache_inv_range)
+	add	r1, r1, r0
+	sub	r1, r1, #1
+	mcrr	p15, 0, r1, r0, c6	/* invaliate D cache range */
+	DSB
+	RET
+
+ENTRY(armv6_idcache_wbinv_range)
+	add	r1, r1, r0
+	sub	r1, r1, #1
+	mcrr	p15, 0, r1, r0, c5	/* invaliate I cache range */
+	mcrr	p15, 0, r1, r0, c14	/* clean & invaliate D cache range */
+	DSB
+	RET
+
+ENTRY_NP(armv6_icache_sync_range)
+	add	r1, r1, r0
+	sub	r1, r1, #1
+	mcrr	p15, 0, r1, r0, c5	/* invalidate I cache range */
+	mcrr	p15, 0, r1, r0, c12	/* clean D cache range */
+	DSB
+	RET
+
+ENTRY_NP(armv6_idcache_wbinv_all)
+	mcr	p15, 0, r0, c7, c5, 0	/* Flush I cache */
+
+ENTRY(armv6_dcache_wbinv_all)
+	mcr	p15, 0, r0, c7, c14, 0	/* clean & invalidate D cache */
+	DSB
+	RET
 
 /*
  * Other functions
  */
-ENTRY(arm11_drain_writebuf)
-	mcr	p15, 0, r0, c7, c10, 4	/* drain write buffer */
-	mov	pc, lr
+ENTRY(armv6_drain_writebuf)
+	DSB
+	RET
 
-ENTRY_NP(arm11_sleep)
+ENTRY_NP(armv6_sleep)
 	mov	r0, #0
 	mcr	p15, 0, r0, c7, c0, 4   /* wait for interrupt */
 	RET
