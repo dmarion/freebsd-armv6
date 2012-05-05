@@ -1,4 +1,4 @@
-# Samsung S3C6410 common options
+# Samsung common options
 #$FreeBSD$
 
 cpu		CPU_ARM11
@@ -12,4 +12,4 @@ options		PHYSADDR=0x50000000
 
 options		STARTUP_PAGETABLE_ADDR=0x50000000
 
-files	"../s3c64xx/files.s3c6410"
+files	"../samsung/files.samsung"

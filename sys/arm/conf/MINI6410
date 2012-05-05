@@ -2,7 +2,7 @@
 #            based FriendlyARM mini6410 board
 
 ident		MINI6410
-include		"../s3c64xx/std.s3c6410"
+include		"../samsung/std.samsung"
 
 
 options		SOC_S3C6410
