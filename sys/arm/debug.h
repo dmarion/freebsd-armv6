@@ -21,24 +21,32 @@ dump_packet(char *pa, unsigned int len)
 #elif defined(SOC_OMAP4)
 #define EARLY_UART_VA_BASE      0xE8020000
 #define EARLY_UART_PA_BASE      0x48020000
+#elif defined (SOC_S3C6410)
+#define EARLY_UART_PA_BASE	0x7f005000
+#define EARLY_UART_VA_BASE	0xef005000
 #else
 #error "Unknown SoC"
 #endif
 
-
 static __inline void
 early_putc(unsigned char c)
 {
-	volatile uint8_t *p_lsr = (volatile uint8_t*) (EARLY_UART_VA_BASE + 0x14);
-	volatile uint8_t *p_thr = (volatile uint8_t*) (EARLY_UART_VA_BASE + 0x00);
-
-	while ((*p_lsr & LSR_THRE) == 0);
-	*p_thr = c;
+#if defined (SOC_S3C6410)
+	volatile uint8_t *status_reg = (volatile uint8_t*) (EARLY_UART_VA_BASE + 0x10);
+	volatile uint8_t *buffer_reg = (volatile uint8_t*) (EARLY_UART_VA_BASE + 0x20);
+	uint8_t buffer_empty_bit = 0x02;
+#else
+	volatile uint8_t *status_reg = (volatile uint8_t*) (EARLY_UART_VA_BASE + 0x14);
+	volatile uint8_t *buffer_reg = (volatile uint8_t*) (EARLY_UART_VA_BASE + 0x00);
+	uint8_t buffer_empty_bit = LSR_THRE;
+#endif
+	while ((*status_reg & buffer_empty_bit) == 0);
+	*buffer_reg = c;
 
 	if (c == '\n')
 	{
-		while ((*p_lsr & LSR_THRE) == 0);
-		*p_thr = '\r';
+		while ((*status_reg & buffer_empty_bit) == 0);
+		*buffer_reg = '\r';
 	}
 }
 
