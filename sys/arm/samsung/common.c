@@ -50,12 +50,6 @@ __FBSDID("$FreeBSD$");
 #include <machine/vmparam.h>
 
 void
-cpu_reset(void)
-{
-	while (1);
-}
-
-void
 arm_unmask_irq(uintptr_t irq)
 {
 }
