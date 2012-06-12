@@ -67,6 +67,12 @@
 				/* I2C0 */
 				"I2C0_SDA", "I2C0_SDA","i2c",
 				"I2C0_SCL", "I2C0_SCL","i2c",
+				/* I2C1 */
+				"spi0_d1",  "I2C1_SDA","i2c",
+				"spi0_cs0", "I2C1_SCL","i2c",
+				/* I2C2 - conntected to EEPROM on cape(s) */
+				"uart1_ctsn", "I2C2_SDA","i2c",
+				"uart1_rtsn", "I2C2_SCL","i2c",
 				/* Ethernet */
 				"MII1_RX_ER", "gmii1_rxerr", "input_pulldown",
 				"MII1_TX_EN", "gmii1_txen", "output",
@@ -185,6 +191,26 @@
 				compatible = "ti,am335x-pmic";
 				reg = <0x24>;
 			};
+		};
+
+		i2c1: i2c@4802a000 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			compatible = "ti,i2c";
+			reg =<	0x4802a000 0x1000 >;
+			interrupts = <71>;
+			interrupt-parent = <&AINTC>;
+			i2c-device-id = <1>;
+		};
+
+		i2c2: i2c@4819c000 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			compatible = "ti,i2c";
+			reg =<	0x4819c000 0x1000 >;
+			interrupts = <30>;
+			interrupt-parent = <&AINTC>;
+			i2c-device-id = <2>;
 		};
 
 		musb@47400000 {
