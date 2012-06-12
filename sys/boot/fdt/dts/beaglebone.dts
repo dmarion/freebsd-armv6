@@ -64,6 +64,10 @@
 			reg =	< 0x44e10000 0x2000 >;
 			/* Set of triplets < padname, muxname, padstate> */
 			scm-pad-config =
+				/* Onboard LEDs */
+				"GPMC_A5", "gpio1_21", "output",
+				"GPMC_A6", "gpio1_22", "output",
+				"GPMC_A7", "gpio1_23", "output",
 				/* I2C0 */
 				"I2C0_SDA", "I2C0_SDA","i2c",
 				"I2C0_SCL", "I2C0_SCL","i2c",
