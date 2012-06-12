@@ -284,6 +284,7 @@ ti_gpio_pin_max(device_t dev, int *maxpin)
 	*maxpin = (banks * PINS_PER_BANK);
 
 	TI_GPIO_UNLOCK(sc);
+	printf("%s: maxpin=%u\n", __func__, *maxpin);
 
 	return (0);
 }
@@ -325,6 +326,7 @@ ti_gpio_pin_getcaps(device_t dev, uint32_t pin, uint32_t *caps)
 
 	TI_GPIO_UNLOCK(sc);
 
+	printf("%s: pin=%u caps=%u\n", __func__, pin, *caps);
 	return (0);
 }
 
@@ -363,6 +365,7 @@ ti_gpio_pin_getflags(device_t dev, uint32_t pin, uint32_t *flags)
 
 	TI_GPIO_UNLOCK(sc);
 
+	printf("%s: pin=%u flags=%u\n", __func__, pin, *flags);
 	return (0);
 }
 
@@ -401,6 +404,7 @@ ti_gpio_pin_getname(device_t dev, uint32_t pin, char *name)
 
 	TI_GPIO_UNLOCK(sc);
 
+	printf("%s: pin=%u name=%s\n", __func__, pin, name);
 	return (0);
 }
 
@@ -431,6 +435,8 @@ ti_gpio_pin_setflags(device_t dev, uint32_t pin, uint32_t flags)
 	uint32_t mask = (1UL << (pin % PINS_PER_BANK));
 	uint32_t reg_val;
 
+	printf("%s: pin=%u flags=%u\n", __func__, pin, flags);
+
 	/* Sanity check the flags supplied are valid, i.e. not input and output */
 	if ((flags & (GPIO_PIN_INPUT|GPIO_PIN_OUTPUT)) == 0x0000)
 		return (EINVAL);
@@ -452,6 +458,7 @@ ti_gpio_pin_setflags(device_t dev, uint32_t pin, uint32_t flags)
 
 	/* Set the GPIO mode and state */
 	if (ti_scm_padconf_set_gpioflags(pin, flags) != 0) {
+		printf("%s: failed on ti_scm_padconf_set_gpioflags\n", __func__);
 		TI_GPIO_UNLOCK(sc);
 		return (EINVAL);
 	}
@@ -466,6 +473,8 @@ ti_gpio_pin_setflags(device_t dev, uint32_t pin, uint32_t flags)
 
 
 	TI_GPIO_UNLOCK(sc);
+	printf("%s: pin=%u regval=%u\n", __func__, pin, reg_val);
+	
 	
 	return (0);
 }
@@ -491,6 +500,7 @@ ti_gpio_pin_set(device_t dev, uint32_t pin, unsigned int value)
 	uint32_t bank = (pin / PINS_PER_BANK);
 	uint32_t mask = (1UL << (pin % PINS_PER_BANK));
 
+	printf("%s: pin=%u value=%u\n", __func__, pin, value);
 	TI_GPIO_LOCK(sc);
 
 	/* Sanity check the pin number is valid */
@@ -551,6 +561,7 @@ ti_gpio_pin_get(device_t dev, uint32_t pin, unsigned int *value)
 
 	TI_GPIO_UNLOCK(sc);
 
+	printf("%s: pin=%u value=%u\n", __func__, pin, *value);
 	return (0);
 }
 
@@ -584,6 +595,7 @@ ti_gpio_pin_toggle(device_t dev, uint32_t pin)
 
 	/* Toggle the pin */
 	val = ti_gpio_read_4(sc, bank, TI_GPIO_DATAOUT);
+	printf("%s: pin=%u bank=%u mask=%u val=%u\n", __func__, pin, bank, mask, val);
 	if (val & mask)
 		ti_gpio_write_4(sc, bank, TI_GPIO_CLEARDATAOUT, mask);
 	else
@@ -704,6 +716,9 @@ ti_gpio_attach(device_t dev)
 
 			/* Enable the interface and functional clocks for the module */
 			ti_prcm_clk_enable(GPIO0_CLK + FIRST_GPIO_BANK + i);
+			
+			printf("%s: TI_GPIO_CTRL[%u] = %x\n",__func__, i,
+				ti_gpio_read_4(sc, i, TI_GPIO_CTRL));
 
 			/* Read the revision number of the module. TI don't publish the
 			 * actual revision numbers, so instead the values have been
